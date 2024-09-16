@@ -1,115 +1,89 @@
-# Wrapper_VideoStation for ffmpeg-wrapper. Standard version:
-Synology VideoStation ffmpeg wrapper with DTS, EAC3 and TrueHD support. It enables hardware transcoding from ffmpeg from Synology for video and transcoding DTS, EAC3, AAC from the ffmpeg of the SynoCommunity.
+<p align="center">
+  <img src="https://github.com/darknebular/Wrapper_VideoStation/blob/main/images/logoIntro.png?raw=true" height=300px alt="intro">
+</p>
+<p align="center">
+  <img src="https://github.com/darknebular/Wrapper_VideoStation/blob/main/images/logo.png?raw=true" height=200px alt="logo">
+</p>
 
-Works fine the OffLine transcoding and the streaming of tipical extensions like: MKV, MP4, AVI ...
+## THE MOST ADVANCED WRAPPER, THE FIRST AND UNIQUE WRAPPER IN INTERNET HAVING 5.1 TRANSCODING. YOU WILL HAVE FULL CONTROL OF THE CODEC USING THE CONFIGURATOR TOOL INTO THE INSTALLER.
 
-This wrapper is a fork of BenjaminPoncet rev.12 with a few changes, fixes and some improvements in his code.
-
-
-********************************************************************
-INSTALL: Wrapper standard
-********************************************************************
-
-# Save VideoStation's ffmpeg
-
-sudo mv -n /var/packages/VideoStation/target/bin/ffmpeg /var/packages/VideoStation/target/bin/ffmpeg.orig
-
-# Injecting the script:
-
-sudo wget -O - https://raw.githubusercontent.com/darknebular/Wrapper_VideoStation/main/ffmpeg-wrapper > /var/packages/VideoStation/target/bin/ffmpeg
-
-# Change ownership and mode of the script
-
-sudo chown root:VideoStation /var/packages/VideoStation/target/bin/ffmpeg
-
-sudo chmod 750 /var/packages/VideoStation/target/bin/ffmpeg
-
-sudo chmod u+s /var/packages/VideoStation/target/bin/ffmpeg
+# Wrapper for VideoStation and DLNA MediaServer for DTS, EAC3 and TrueHD with 5.1 support:
+Synology VideoStation and MediaServer FFmpeg (and GStreamer) Wrapper with DTS, EAC3 and TrueHD support. It enables hardware transcoding from Synology´s ffmpeg for video and transcoding DTS, HEVC, EAC3, AAC, True HD from the ffmpeg of the SynoCommunity. When you use this SynoCommunity´s ffmpeg, you will have AAC 5.1 512kbps Surround and another audio track MP3 2.0 256kbps Stereo for Chromecast or GoogleTV or other clients that don´t accept 5.1 AAC.
 
 
-# Save VideoStation's libsynovte.so
+Works fine the OffLine transcoding and the streaming of tipical extensions like: MKV, MP4, AVI... Works fine the thumbnails in VideoStation.
 
-sudo cp -n /var/packages/VideoStation/target/lib/libsynovte.so /var/packages/VideoStation/target/lib/libsynovte.so.orig
+This wrapper is a fork of BenjaminPoncet rev.12 with a some changes, fixes and some improvements in his code.
 
-sudo chown VideoStation:VideoStation /var/packages/VideoStation/target/lib/libsynovte.so.orig
+# VideoStation and DLNA MediaServer FFMPEG-Wrapper, now with Installer and Codecs CONFIGURATOR: 
 
+This installer is designed to simplify the installation steps and enable **DTS**, **EAC3** and **TrueHD** support to Synology VideoStation and MediaServer by replacing the ffmpeg binary files by a wrapper using SynoCommunity ffmpeg, (only when It´s necessary).
+You will can change the order of the audio codecs in the Wrapper, install the most Advanced Wrapper with 5.1 or the Simplest one, patch DLNA MediaServer and VideoStation, all in the SAME Installer.
 
-# Patch libsynovte.so to authorize DTS, EAC3 and TrueHD
+The Installer has Multi Language support (English, Spanish, Portuguese, French, German, Italian).
 
-sudo sed -i -e 's/eac3/3cae/' -e 's/dts/std/' -e 's/truehd/dheurt/' /var/packages/VideoStation/target/lib/libsynovte.so
+# Now the Installer has the AME's License Fix: 
+This enables the AAC and HEVC codecs and its license in the AME package, until DSM 7.2.
+This patcher enables Advanced Media Extensions 3.0 for you, without having to login account (You still need a valid S/N. If you need to spoof the S/N, please use the synocodectools). When you install this License's patch, the Wrapper must be uninstalled and you must to re-install it again.
+This is not mandatory to have it installed for installing the Wrapper.
 
+*(Use at your own risk, although it has been done to be as safe as possible, there could be errors. (Crack for XPEnology and Synology without AME's license).*
 
-# Apply the WRAPPER to the decoder:
+## Dependencies:
+- DSM 7.0-41890 (and above)
+- Video Station 2.4.6-1594 (and above)
+- SynoCommunity FFMPEG 6.0.2. (and above) ([help](https://synocommunity.com/#easy-install))
+- Advanced Media Extensions 1.0.0-50001 (and above). (The licence in AME must be LOADED and ACTIVATED.)
 
-sudo mv /var/packages/CodecPack/target/bin/ffmpeg33 /var/packages/CodecPack/target/bin/ffmpeg33.orig
+## Optional Packages:
+- MediaServer 1.1.0-0201 (and above) (OPTIONAL)
 
-sudo cp /var/packages/VideoStation/target/bin/ffmpeg /var/packages/CodecPack/target/bin/ffmpeg33
+## Supported / Unsupported scenarios:
+- DTS or EAC3 or TrueHD or AAC + Any non standard video format: ✅
+- no DTS, no EAC3, no TrueHD, no AAC + HEVC: ✅
+- DTS or EAC3 or TrueHD or AAC (5.1 or 7.1) + HEVC: ✅
+- DSM 7.X.X: ✅
+- With DS-XXX PLAY Appliances or Low Powered Devices: ✅ *(I recommend install the Simplest Wrapper. The Advanced needs better CPU or have a GPU available for FFmpeg binary for HEVC decoding.)*
+- DSM 6.2: ⚠️ The installer doesn´t support this version.
 
-sudo chmod 755 /var/packages/CodecPack/target/bin/ffmpeg33
+*(In low powered devices you only will have remux of the audio or only be able to play it without transcoding.)*
 
+## Instructions:
+- Check that you meet the required dependencies
+- Install SynoCommunity ffmpeg ([help](https://synocommunity.com/#easy-install))
+- Connect to your NAS using SSH (admin user required) *(I recommend maximizing the window to read it better.)* ([help](https://www.synology.com/en-global/knowledgebase/DSM/tutorial/General_Setup/How_to_login_to_DSM_with_root_permission_via_SSH_Telnet))
+- Use the command `sudo -i` to switch to root user
+- Use the following command (Basic command) to execute the patch
+- You'll have to re-run the patcher everytime you update VideoStation, Advanced Media Extensions and DSM
 
+# USAGE:
+Basic Installation command:  
+`bash -c "$(curl "https://raw.githubusercontent.com/darknebular/Wrapper_VideoStation/main/installer.sh")"`
 
-# Restart VideoStation (Stop/Start in "Package Center")
+.
 
+With options:  
+`bash -c "$(curl "https://raw.githubusercontent.com/darknebular/Wrapper_VideoStation/main/installer.sh")" -- -s <Flags>`
 
-
-********************************************************************
-UNISTALL:
-********************************************************************
-# Restore VideoStation's ffmpeg, libsynovte.so
-
-sudo rm /var/packages/VideoStation/target/bin/ffmpeg
-
-sudo mv -f /var/packages/VideoStation/target/bin/ffmpeg.orig /var/packages/VideoStation/target/bin/ffmpeg
-
-sudo rm /var/packages/VideoStation/target/lib/libsynovte.so
-
-sudo mv -f /var/packages/VideoStation/target/lib/libsynovte.so.orig /var/packages/VideoStation/target/lib/libsynovte.so
-
-sudo rm /var/packages/CodecPack/target/bin/ffmpeg33
-
-sudo mv /var/packages/CodecPack/target/bin/ffmpeg33.orig /var/packages/CodecPack/target/bin/ffmpeg33
-
-
-
-
-************************************************************************
-
-# For DSM 7.0:
-
-# INSTALL: Wrapper for Advance Codec Pack installed ffmpeg41-wrapper file 
-
-************************************************************************
-# With this wrapper (ffmpeg41-wrapper file) you will be with the original ffmpeg almost time and only you will use the ffmpeg 4.31 when is 100% necessary
-
-1) cd /var/packages/CodecPack/target/bin
-
-2) sudo mv /var/packages/CodecPack/target/bin/ffmpeg41 /var/packages/CodecPack/target/bin/ffmpeg41.orig
-
-3.a) sudo vi ffmpeg41
-
-----Push I key and then COPY the content of the file called ffmpeg41-wrapper
-
-----ESC key and then write :wq
-
-# Or you can do this if you don´t want to use VI command:
-3.b) wget -O - https://raw.githubusercontent.com/darknebular/Wrapper_VideoStation/main/ffmpeg41-wrapper > /var/packages/CodecPack/target/bin/ffmpeg41
-
-4) sudo chmod 755 /var/packages/CodecPack/target/bin/ffmpeg41
+| Flags        | Required | Description                                                                     |
+|--------------|----------|---------------------------------------------------------------------------------|
+| start        | No       | The default flag going to the MAIN Menu.                                        |   
+| install      | No       | This install the Advanced Wrapper.                                              |  
+| autoinstall  | No       | This install the Advanced/Simplest Wrapper without prompts (Automatic Mode)     |  
+| uninstall    | No       | This flag uninstall the patch. (Simplest or the Advanced one).                  |
+| config       | No       | Change the behaviour of the audio codecs for the Advanced Wrapper               |
+| info         | No       | Show the general info of the Installer                                          |
 
 
 
-# Save VideoStation's libsynovte.so
 
-5) sudo cp -n /var/packages/VideoStation/target/lib/libsynovte.so /var/packages/VideoStation/target/lib/libsynovte.so.orig
-
-6) sudo chown VideoStation:VideoStation /var/packages/VideoStation/target/lib/libsynovte.so.orig
-
-
-# Patch libsynovte.so to authorize DTS, EAC3 and TrueHD
-
-7) sudo sed -i -e 's/eac3/3cae/' -e 's/dts/std/' -e 's/truehd/dheurt/' /var/packages/VideoStation/target/lib/libsynovte.so
-
-8) sudo synopkg restart VideoStation
+## Tests Wrappers:
+<p align="center">
+  <img src="https://github.com/darknebular/Wrapper_VideoStation/blob/main/images/test_results.png?raw=true" alt="wrappers">
+</p>
 
 
+## Tests Installers:
+<p align="center">
+  <img src="https://github.com/darknebular/Wrapper_VideoStation/blob/main/images/test_installers.png?raw=true" alt="installers">
+</p>
